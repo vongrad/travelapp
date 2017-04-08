@@ -1,11 +1,19 @@
 package dk.itu.vongrad.travelapp;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import dk.itu.vongrad.travelapp.realm.model.Account;
+import dk.itu.vongrad.travelapp.realm.model.User;
+import dk.itu.vongrad.travelapp.realm.utils.AuthManager;
+import dk.itu.vongrad.travelapp.repository.UserRepository;
+import io.realm.ObjectServerError;
+import io.realm.SyncUser;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -49,6 +57,25 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                Account account = new Account(0.0);
+
+                User user = new User(edt_firstName.getText().toString(), edt_lastName.getText().toString(),
+                        edt_email.getText().toString(), Long.parseLong(edt_cardId.getText().toString()),
+                        edt_username.getText().toString(), edt_password.getText().toString(), account);
+
+                AuthManager.register(user, new SyncUser.Callback() {
+                    @Override
+                    public void onSuccess(SyncUser user) {
+                        Intent i = new Intent(RegisterActivity.this, NavigationActivity.class);
+                        startActivity(i);
+                        finish();
+                    }
+
+                    @Override
+                    public void onError(ObjectServerError error) {
+
+                    }
+                });
             }
         });
     }

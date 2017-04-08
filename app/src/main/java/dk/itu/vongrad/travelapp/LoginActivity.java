@@ -8,7 +8,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-public class LoginActivity extends AppCompatActivity {
+import dk.itu.vongrad.travelapp.realm.utils.AuthManager;
+import io.realm.ObjectServerError;
+import io.realm.SyncUser;
+
+public class LoginActivity extends AppCompatActivity implements SyncUser.Callback {
 
     private EditText edt_username;
     private EditText edt_password;
@@ -17,11 +21,16 @@ public class LoginActivity extends AppCompatActivity {
 
     private TextView txt_register;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        if (AuthManager.isAuthenticated()) {
+            AuthManager.setActiveUser(SyncUser.currentUser());
+
+            completeLogin();
+        }
 
         edt_username = (EditText) findViewById(R.id.edt_username);
         edt_password = (EditText) findViewById(R.id.edt_password);
@@ -29,6 +38,7 @@ public class LoginActivity extends AppCompatActivity {
         btn_login = (Button) findViewById(R.id.btn_login);
 
         txt_register = (TextView) findViewById(R.id.txt_register);
+
 
         txt_register.setOnClickListener(new View.OnClickListener(){
 
@@ -38,5 +48,32 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
+
+        btn_login.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                AuthManager.login(edt_username.getText().toString(), edt_password.getText().toString(), LoginActivity.this);
+            }
+        });
+    }
+
+    @Override
+    public void onSuccess(SyncUser user) {
+        completeLogin();
+    }
+
+    /**
+     * Complete the login
+     */
+    private void completeLogin() {
+        Intent i = new Intent(LoginActivity.this, NavigationActivity.class);
+        startActivity(i);
+        finish();
+    }
+
+    @Override
+    public void onError(ObjectServerError error) {
+        //TODO: show error message
     }
 }

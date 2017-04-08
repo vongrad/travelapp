@@ -3,7 +3,8 @@ package dk.itu.vongrad.travelapp;
 import android.app.Application;
 
 import io.realm.Realm;
-import io.realm.RealmConfiguration;
+import io.realm.log.LogLevel;
+import io.realm.log.RealmLog;
 
 /**
  * Created by Adam Vongrej on 3/22/17.
@@ -17,10 +18,6 @@ public class GlobalApplication extends Application {
 
         // Default Realm config
         Realm.init(this);
-        RealmConfiguration config = new RealmConfiguration.Builder()
-                .name("travelapp.realm")
-                .schemaVersion(1)
-                .build();
-        Realm.setDefaultConfiguration(config);
+        RealmLog.setLevel(LogLevel.TRACE);
     }
 }
