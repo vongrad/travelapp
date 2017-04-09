@@ -67,7 +67,7 @@ public class LoginActivity extends AppCompatActivity implements SyncUser.Callbac
      * Complete the login
      */
     private void completeLogin() {
-        Intent i = new Intent(LoginActivity.this, NavigationActivity.class);
+        Intent i = new Intent(LoginActivity.this, MainActivity.class);
         startActivity(i);
         finish();
     }

@@ -11,7 +11,6 @@ import android.widget.TextView;
 import dk.itu.vongrad.travelapp.realm.model.Account;
 import dk.itu.vongrad.travelapp.realm.model.User;
 import dk.itu.vongrad.travelapp.realm.utils.AuthManager;
-import dk.itu.vongrad.travelapp.repository.UserRepository;
 import io.realm.ObjectServerError;
 import io.realm.SyncUser;
 
@@ -66,7 +65,7 @@ public class RegisterActivity extends AppCompatActivity {
                 AuthManager.register(user, new SyncUser.Callback() {
                     @Override
                     public void onSuccess(SyncUser user) {
-                        Intent i = new Intent(RegisterActivity.this, NavigationActivity.class);
+                        Intent i = new Intent(RegisterActivity.this, MainActivity.class);
                         startActivity(i);
                         finish();
                     }

@@ -12,23 +12,12 @@ import io.realm.annotations.PrimaryKey;
  * Created by Adam Vongrej on 3/22/17.
  */
 
-public class Transaction extends RealmObject implements AutoIncementable {
-
-    @PrimaryKey
-    private long id;
+public class Transaction extends RealmObject {
 
     private Date createdAt;
     private double amount;
 
     private TransactionInfo transactionInfo;
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
 
     public Date getCreatedAt() {
         return createdAt;
@@ -52,24 +41,5 @@ public class Transaction extends RealmObject implements AutoIncementable {
 
     public void setTransactionInfo(TransactionInfo transactionInfo) {
         this.transactionInfo = transactionInfo;
-    }
-
-    @Override
-    public void setPrimaryKey(int id) {
-        this.id = id;
-    }
-
-    @Override
-    public int getNextPrimaryKey(Realm realm) {
-        Number maxId = realm.where(User.class).max(RealmTable.ID);
-
-        int nextId;
-
-        if(maxId == null) {
-            nextId = 1;
-        } else {
-            nextId = maxId.intValue() + 1;
-        }
-        return nextId;
     }
 }

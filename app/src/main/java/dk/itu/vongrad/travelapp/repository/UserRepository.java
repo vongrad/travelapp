@@ -39,4 +39,8 @@ public class UserRepository {
 
         return result;
     }
+
+    public static User getCurrentUser() {
+        return getCurrent().first();
+    }
 }
