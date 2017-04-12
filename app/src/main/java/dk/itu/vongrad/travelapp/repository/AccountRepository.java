@@ -40,6 +40,19 @@ public class AccountRepository {
     }
 
     /**
+     * Add acount transaction
+     * @param transaction
+     */
+    public static void addTransaction(final Transaction transaction) {
+        Realm.getDefaultInstance().executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+
+            }
+        });
+    }
+
+    /**
      * Get all transactions
      */
     public static RealmResults<Transaction> getTransactions() {

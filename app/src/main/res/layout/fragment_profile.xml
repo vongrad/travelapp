@@ -35,7 +35,8 @@
                 android:id="@+id/edt_firstname"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/firstname" />
+                android:hint="@string/firstname"
+                android:inputType="textPersonName" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -49,7 +50,8 @@
                 android:id="@+id/edt_lastname"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/lastname" />
+                android:hint="@string/lastname"
+                android:inputType="textPersonName" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -63,7 +65,8 @@
                 android:id="@+id/edt_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/email" />
+                android:hint="@string/email"
+                android:inputType="textEmailAddress" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -76,7 +79,8 @@
                 android:id="@+id/edt_cardid"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/cardid" />
+                android:hint="@string/cardid"
+                android:inputType="number" />
         </android.support.design.widget.TextInputLayout>
 
         <Button

@@ -38,6 +38,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/firstname"
+                android:inputType="textPersonName"
                 android:textColor="@color/colorPrimary"
                 android:textColorHint="@color/colorAccent" />
         </android.support.design.widget.TextInputLayout>
@@ -51,6 +52,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/lastname"
+                android:inputType="textPersonName"
                 android:textColor="@color/colorPrimary"
                 android:textColorHint="@color/colorAccent" />
         </android.support.design.widget.TextInputLayout>
@@ -64,6 +66,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/email"
+                android:inputType="textEmailAddress"
                 android:textColor="@color/colorPrimary"
                 android:textColorHint="@color/colorAccent" />
         </android.support.design.widget.TextInputLayout>
@@ -77,6 +80,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/cardid"
+                android:inputType="number"
                 android:textColor="@color/colorPrimary"
                 android:textColorHint="@color/colorAccent" />
         </android.support.design.widget.TextInputLayout>
@@ -90,6 +94,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/username"
+                android:inputType="textNoSuggestions"
                 android:textColor="@color/colorPrimary"
                 android:textColorHint="@color/colorAccent" />
 
@@ -104,6 +109,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/password"
+                android:inputType="textPassword"
                 android:textColor="@color/colorPrimary"
                 android:textColorHint="@color/colorAccent" />
         </android.support.design.widget.TextInputLayout>

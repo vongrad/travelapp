@@ -182,13 +182,15 @@ public class HomeFragment extends Fragment implements BeaconManager.MonitoringLi
     private void endTrip() {
         try {
             TripsRepository.finishTrip(getContext());
+
+            activeTrip = null;
+            adapter = null;
+            rv_locations.setAdapter(null);
+
+            Toast.makeText(getContext(), getString(R.string.trip_ended), Toast.LENGTH_LONG).show();
         } catch (Exception e) {
             Toast.makeText(getContext(), getString(R.string.exc_no_active), Toast.LENGTH_LONG).show();
         }
-        activeTrip = null;
-        adapter = null;
-        rv_locations.setAdapter(null);
-        Toast.makeText(getContext(), getString(R.string.trip_ended), Toast.LENGTH_LONG).show();
     }
 
     private void updateSlideButton() {

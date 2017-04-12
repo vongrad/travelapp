@@ -12,6 +12,7 @@ import dk.itu.vongrad.travelapp.realm.model.Transaction;
 import dk.itu.vongrad.travelapp.realm.model.Trip;
 import dk.itu.vongrad.travelapp.realm.model.User;
 import dk.itu.vongrad.travelapp.realm.table.RealmTable;
+import dk.itu.vongrad.travelapp.utils.TripsHelper;
 import io.realm.Realm;
 import io.realm.RealmList;
 
@@ -76,9 +77,6 @@ public class TripsRepository {
         Trip trip = realm.createObject(Trip.class);
         trip.setCreatedAt(startDate);
 
-        Transaction transaction = realm.createObject(Transaction.class);
-        trip.setTransaction(transaction);
-
         trip.getLocations().add(location);
 
         user.getTrips().add(trip);
@@ -123,7 +121,19 @@ public class TripsRepository {
         Realm.getDefaultInstance().executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
+                Transaction transaction = realm.createObject(Transaction.class);
+                transaction.setCreatedAt(new Date());
+
+                double amount = TripsHelper.calculateCost(trip);
+                transaction.setAmount(-amount);
+
+                User user = UserRepository.getCurrentUser();
+                user.getAccount().getTransactions().add(transaction);
+
+                user.getAccount().setBalance(user.getAccount().getBalance() + transaction.getAmount());
+
                 trip.setEndedAt(new Date());
+                trip.setTransaction(transaction);
             }
         });
     }

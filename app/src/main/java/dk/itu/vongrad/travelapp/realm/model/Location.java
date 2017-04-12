@@ -83,4 +83,14 @@ public class Location extends RealmObject {
     public String toString() {
         return "Floor: " + floor + ", room: " + room;
     }
+
+    @Override
+    public int hashCode() {
+        int result = floor != null ? floor.hashCode() : 0;
+        result = 31 * result + (area != null ? area.hashCode() : 0);
+        result = 31 * result + (room != null ? room.hashCode() : 0);
+        result = 31 * result + (number != null ? number.hashCode() : 0);
+        result = 31 * result + (createdAt != null ? createdAt.hashCode() : 0);
+        return result;
+    }
 }

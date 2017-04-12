@@ -36,7 +36,7 @@ public class TripsAdapter extends RealmRecyclerAdapter<Trip, TripsAdapter.ViewHo
         final Trip trip = getItem(position);
         holder.txt_from.setText(LocationHelper.formatText(trip.getLocations().first()));
         holder.txt_to.setText(LocationHelper.formatText(trip.getLocations().last()));
-        //holder.txt_price.setText(String.valueOf(trip.getTransaction().getAmount()));
+        holder.txt_price.setText(String.valueOf(trip.getTransaction().getAmount()));
 
         holder.view.setOnClickListener(new View.OnClickListener() {
             @Override
