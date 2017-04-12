@@ -1,9 +1,14 @@
 package dk.itu.vongrad.travelapp.repository;
 
+import java.util.Date;
+
 import dk.itu.vongrad.travelapp.realm.model.Transaction;
 import dk.itu.vongrad.travelapp.realm.model.User;
+import dk.itu.vongrad.travelapp.realm.table.RealmTable;
 import io.realm.Realm;
 import io.realm.RealmList;
+import io.realm.RealmResults;
+import io.realm.Sort;
 
 /**
  * Created by Adam Vongrej on 4/9/17.
@@ -24,6 +29,7 @@ public class AccountRepository {
 
                 Transaction transaction = realm.createObject(Transaction.class);
                 transaction.setAmount(amount);
+                transaction.setCreatedAt(new Date());
 
                 user.getAccount().getTransactions().add(transaction);
 
@@ -36,7 +42,7 @@ public class AccountRepository {
     /**
      * Get all transactions
      */
-    public static RealmList<Transaction> getTransactions() {
-        return UserRepository.getCurrentUser().getAccount().getTransactions();
+    public static RealmResults<Transaction> getTransactions() {
+        return UserRepository.getCurrentUser().getAccount().getTransactions().where().findAllSorted(RealmTable.Transaction.CREATED_AT, Sort.DESCENDING);
     }
 }

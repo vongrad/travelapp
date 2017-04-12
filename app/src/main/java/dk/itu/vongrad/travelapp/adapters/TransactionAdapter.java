@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import dk.itu.vongrad.travelapp.R;
 import dk.itu.vongrad.travelapp.realm.model.Transaction;
-import io.realm.RealmList;
+import io.realm.RealmResults;
 
 /**
  * Created by Adam Vongrej on 4/9/17.
@@ -18,7 +18,7 @@ import io.realm.RealmList;
 
 public class TransactionAdapter extends RealmRecyclerAdapter<Transaction, TransactionAdapter.ViewHolder> {
 
-    public TransactionAdapter(Context context, RealmList<Transaction> data) {
+    public TransactionAdapter(Context context, RealmResults<Transaction> data) {
         super(context, data);
     }
 
@@ -45,7 +45,7 @@ public class TransactionAdapter extends RealmRecyclerAdapter<Transaction, Transa
     }
 
     private String getSign(double amount) {
-        return amount < 0 ? "- " : "+ ";
+        return amount < 0 ? "Payment: - " : "Deposit: + ";
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

@@ -18,6 +18,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import dk.itu.vongrad.travelapp.realm.model.Transaction;
+import dk.itu.vongrad.travelapp.realm.model.Trip;
 import dk.itu.vongrad.travelapp.realm.model.User;
 import dk.itu.vongrad.travelapp.realm.utils.AuthManager;
 import dk.itu.vongrad.travelapp.repository.UserRepository;
@@ -27,7 +29,8 @@ import io.realm.RealmResults;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
         ProfileFragment.OnFragmentInteractionListener,
         HomeFragment.OnFragmentInteractionListener,
-        AccountFragment.OnFragmentInteractionListener {
+        AccountFragment.OnFragmentInteractionListener,
+        TripsFragment.OnListFragmentInteractionListener {
 
     private TextView txt_name;
     private TextView txt_email;
@@ -143,15 +146,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             fragment = AccountFragment.newInstance();
 
         } else if (id == R.id.nav_trips) {
+            fragment = TripsFragment.newInstance();
 
         } else if (id == R.id.nav_logout) {
+            AuthManager.logout();
 
+            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+            // Clear the history stack
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
         }
 
         if(fragment != null ) {
             replaceFragment(fragment);
         }
-
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -176,6 +184,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onFragmentInteraction(Uri uri) {
+
+    }
+
+    @Override
+    public void onItemClicked(Trip transaction) {
 
     }
 }

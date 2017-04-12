@@ -7,6 +7,10 @@ package dk.itu.vongrad.travelapp.realm.table;
 public interface RealmTable {
 
     String ID = "id";
+    String TABLE_ACCOUNT = "account";
+    String TABLE_USER = "user";
+    String TABLE_TRANSACTION = "transaction";
+    String TABLE_TRIP = "trip";
 
     interface User {
 
@@ -17,6 +21,21 @@ public interface RealmTable {
         String USERNAME = "username";
         String PASSWORD = "password";
         String ACCOUNT = "account";
+    }
+
+    interface Trip {
+        String CREATED_AT = "createdAt";
+        String ENDED_AT = "endedAt";
+        String TRANSACTION = TABLE_TRANSACTION;
+        String LOCATIONS = "locations";
+    }
+
+    interface Location {
+        String FLOOR = "floor";
+        String AREA = "area";
+        String ROOM = "room";
+        String NUMBER = "number";
+        String CREATED_AT = "createdAt";
     }
 
     interface Account {

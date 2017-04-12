@@ -4,9 +4,11 @@ import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 
+import io.realm.OrderedRealmCollection;
 import io.realm.RealmChangeListener;
 import io.realm.RealmList;
 import io.realm.RealmObject;
+import io.realm.RealmResults;
 
 /**
  * Created by Adam Vongrej on 4/9/17.
@@ -15,11 +17,11 @@ import io.realm.RealmObject;
 public abstract class RealmRecyclerAdapter<T extends RealmObject, VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH> {
 
     protected LayoutInflater inflater;
-    protected RealmList<T> adapterData;
+    protected OrderedRealmCollection<T> adapterData;
     protected Context context;
-    private final RealmChangeListener<RealmList<T>> listener;
+    private final RealmChangeListener<OrderedRealmCollection<T>> listener;
 
-    public RealmRecyclerAdapter(Context context, RealmList<T> data) {
+    public RealmRecyclerAdapter(Context context, OrderedRealmCollection<T> data) {
 
         if (context == null) {
             throw new IllegalArgumentException("Context cannot be null");
@@ -28,9 +30,9 @@ public abstract class RealmRecyclerAdapter<T extends RealmObject, VH extends Rec
         this.adapterData = data;
         this.inflater = LayoutInflater.from(context);
 
-        this.listener = new RealmChangeListener<RealmList<T>>() {
+        this.listener = new RealmChangeListener<OrderedRealmCollection<T>>() {
             @Override
-            public void onChange(RealmList<T> element) {
+            public void onChange(OrderedRealmCollection<T> results) {
                 notifyDataSetChanged();
             }
         };
@@ -40,12 +42,29 @@ public abstract class RealmRecyclerAdapter<T extends RealmObject, VH extends Rec
         }
     }
 
-    private void addListener(RealmList<T> data) {
-        data.addChangeListener(listener);
+    private void addListener(OrderedRealmCollection<T> data) {
+
+        if (data instanceof RealmResults) {
+            RealmResults realmResults = (RealmResults) data;
+            realmResults.addChangeListener(listener);
+        } else if (data instanceof RealmList) {
+            RealmList realmList = (RealmList) data;
+            realmList.addChangeListener(listener);
+        } else {
+            throw new IllegalArgumentException("RealmCollection not supported: " + data.getClass());
+        }
     }
 
-    private void removeListener(RealmList<T> data) {
-        data.removeChangeListener(listener);
+    private void removeListener(OrderedRealmCollection<T> data) {
+        if (data instanceof RealmResults) {
+            RealmResults realmResults = (RealmResults) data;
+            realmResults.removeChangeListener(listener);
+        } else if (data instanceof RealmList) {
+            RealmList realmList = (RealmList) data;
+            realmList.removeChangeListener(listener);
+        } else {
+            throw new IllegalArgumentException("RealmCollection not supported: " + data.getClass());
+        }
     }
 
     /**
@@ -75,7 +94,7 @@ public abstract class RealmRecyclerAdapter<T extends RealmObject, VH extends Rec
     /**
      * Get the row id associated with the specified position in the list. Note that item IDs are not stable so you
      * cannot rely on the item ID being the same after {@link #notifyDataSetChanged()} or
-     * {@link #updateData(RealmList)} has been called.
+     * {@link #updateData(OrderedRealmCollection)} has been called.
      *
      * @param position The position of the item within the adapter's data set whose row id we want.
      * @return The id of the item at the specified position.
@@ -96,7 +115,7 @@ public abstract class RealmRecyclerAdapter<T extends RealmObject, VH extends Rec
      *
      * @param data the new {@link RealmList} to display.
      */
-    public void updateData(RealmList<T> data) {
+    public void updateData(OrderedRealmCollection<T> data) {
         if (listener != null) {
             if (adapterData != null) {
                 removeListener(adapterData);

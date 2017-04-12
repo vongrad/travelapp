@@ -18,7 +18,29 @@
             android:layout_height="60dp"
             android:layout_alignParentBottom="true"
             android:layout_alignParentStart="true"
-            app:text="@string/start_rejse"
+            app:text="@string/start_trip"
             app:thumb="@mipmap/rejse" />
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="25dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/icon_bus" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_locations"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/sb_start"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/imageView2"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:layout_marginTop="@dimen/activity_vertical_margin" />
     </RelativeLayout>
 </FrameLayout>

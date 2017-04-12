@@ -19,11 +19,8 @@ import dk.itu.vongrad.travelapp.realm.model.Transaction;
 import dk.itu.vongrad.travelapp.realm.model.User;
 import dk.itu.vongrad.travelapp.repository.AccountRepository;
 import dk.itu.vongrad.travelapp.repository.UserRepository;
-import io.realm.ObjectChangeSet;
 import io.realm.RealmChangeListener;
-import io.realm.RealmList;
-import io.realm.RealmModel;
-import io.realm.RealmObjectChangeListener;
+import io.realm.RealmResults;
 
 
 /**
@@ -69,7 +66,7 @@ public class AccountFragment extends Fragment {
 
         user = UserRepository.getCurrentUser();
 
-        RealmList<Transaction> transactions = AccountRepository.getTransactions();
+        RealmResults<Transaction> transactions = AccountRepository.getTransactions();
         adapter = new TransactionAdapter(getContext(), transactions);
     }
 
@@ -120,6 +117,7 @@ public class AccountFragment extends Fragment {
     }
 
     public void updateBalance(Account account) {
+        System.out.println("Updating balance");
         edt_balance.setText(String.valueOf(account.getBalance()));
     }
 

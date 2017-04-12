@@ -3,6 +3,7 @@ package dk.itu.vongrad.travelapp.realm.model;
 import dk.itu.vongrad.travelapp.realm.table.RealmTable;
 import dk.itu.vongrad.travelapp.realm.utils.AutoIncementable;
 import io.realm.Realm;
+import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.Ignore;
 import io.realm.annotations.PrimaryKey;
@@ -42,6 +43,8 @@ public class User extends RealmObject {
     private String password;
 
     private Account account;
+
+    private RealmList<Trip> trips;
 
     public String getFullName() {
         return firstName + " " + lastName;
@@ -101,5 +104,13 @@ public class User extends RealmObject {
 
     public void setAccount(Account account) {
         this.account = account;
+    }
+
+    public RealmList<Trip> getTrips() {
+        return trips;
+    }
+
+    public void setTrips(RealmList<Trip> trips) {
+        this.trips = trips;
     }
 }

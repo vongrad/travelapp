@@ -17,8 +17,6 @@ public class Transaction extends RealmObject {
     private Date createdAt;
     private double amount;
 
-    private TransactionInfo transactionInfo;
-
     public Date getCreatedAt() {
         return createdAt;
     }
@@ -33,13 +31,5 @@ public class Transaction extends RealmObject {
 
     public void setAmount(double amount) {
         this.amount = amount;
-    }
-
-    public TransactionInfo getTransactionInfo() {
-        return transactionInfo;
-    }
-
-    public void setTransactionInfo(TransactionInfo transactionInfo) {
-        this.transactionInfo = transactionInfo;
     }
 }
