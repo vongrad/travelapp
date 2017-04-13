@@ -19,7 +19,7 @@ public class TripsAdapter extends RealmRecyclerAdapter<Trip, TripsAdapter.ViewHo
 
     private final OnListFragmentInteractionListener mListener;
 
-    public TripsAdapter(Context context, RealmList<Trip> data, OnListFragmentInteractionListener mListener) {
+    public TripsAdapter(Context context, RealmResults<Trip> data, OnListFragmentInteractionListener mListener) {
         super(context, data);
         this.mListener = mListener;
     }
@@ -36,7 +36,7 @@ public class TripsAdapter extends RealmRecyclerAdapter<Trip, TripsAdapter.ViewHo
         final Trip trip = getItem(position);
         holder.txt_from.setText(LocationHelper.formatText(trip.getLocations().first()));
         holder.txt_to.setText(LocationHelper.formatText(trip.getLocations().last()));
-        holder.txt_price.setText(String.valueOf(trip.getTransaction().getAmount()));
+        holder.txt_price.setText(trip.getTransaction().getAmount() + " DKK");
 
         holder.view.setOnClickListener(new View.OnClickListener() {
             @Override

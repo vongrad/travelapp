@@ -18,23 +18,22 @@ import android.widget.Toast;
 
 import com.estimote.sdk.Beacon;
 import com.estimote.sdk.BeaconManager;
+import com.estimote.sdk.MacAddress;
 import com.estimote.sdk.Region;
 import com.estimote.sdk.SystemRequirementsChecker;
 import com.rojoxpress.slidebutton.SlideButton;
 
 import java.util.List;
+import java.util.UUID;
 
 import dk.itu.vongrad.travelapp.adapters.LocationsAdapter;
-import dk.itu.vongrad.travelapp.exceptions.ActiveTripException;
 import dk.itu.vongrad.travelapp.exceptions.NoActiveTripException;
 import dk.itu.vongrad.travelapp.realm.model.Location;
-import dk.itu.vongrad.travelapp.realm.model.Transaction;
 import dk.itu.vongrad.travelapp.realm.model.Trip;
 import dk.itu.vongrad.travelapp.realm.table.RealmTable;
 import dk.itu.vongrad.travelapp.repository.TripsRepository;
 import dk.itu.vongrad.travelapp.services.BeaconService;
 import io.realm.RealmChangeListener;
-import io.realm.RealmList;
 import io.realm.RealmResults;
 import io.realm.Sort;
 
@@ -51,7 +50,7 @@ public class HomeFragment extends Fragment implements BeaconManager.MonitoringLi
 
     private Beacon lastBeacon;
 
-    private Trip activeTrip;
+    private RealmResults<Trip> activeTrips;
 
     private SlideButton sb_start;
     private RecyclerView rv_locations;
@@ -85,6 +84,8 @@ public class HomeFragment extends Fragment implements BeaconManager.MonitoringLi
     public void onResume() {
         super.onResume();
 
+        getActivity().setTitle(getString(R.string.app_name));
+
         SystemRequirementsChecker.checkWithDefaultDialogs(getActivity());
 
         // Start the service
@@ -92,6 +93,14 @@ public class HomeFragment extends Fragment implements BeaconManager.MonitoringLi
 
         // Bind to the service
         getContext().bindService(new Intent(getContext(), BeaconService.class), serviceConnection, Context.BIND_AUTO_CREATE);
+
+        activeTrips = TripsRepository.getActiveTrips();
+        activeTrips.addChangeListener(new RealmChangeListener<RealmResults<Trip>>() {
+            @Override
+            public void onChange(RealmResults<Trip> trips) {
+                updateUI(trips.first(null));
+            }
+        });
     }
 
     @Override
@@ -99,16 +108,17 @@ public class HomeFragment extends Fragment implements BeaconManager.MonitoringLi
         super.onPause();
 
         getContext().unbindService(serviceConnection);
+
+        activeTrips.removeAllChangeListeners();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-        activeTrip = TripsRepository.getActive();
-
-        if (activeTrip != null) {
-            adapter = new LocationsAdapter(getContext(), activeTrip.getLocations().sort(RealmTable.Location.CREATED_AT, Sort.DESCENDING));
-        }
 
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
@@ -124,40 +134,65 @@ public class HomeFragment extends Fragment implements BeaconManager.MonitoringLi
 
         sb_start = (SlideButton) view.findViewById(R.id.sb_start);
 
-        updateSlideButton();
-
         sb_start.setSlideButtonListener(new SlideButton.SlideButtonListener() {
             @Override
             public void onSlide() {
-                updateTripState();
+                handleTrip();
             }
         });
 
-        sb_start.setEnabled(lastBeacon != null);
+        toggleEnabled(sb_start, false);
+        sb_start.setText(getString(R.string.not_ready));
 
         return view;
     }
 
-    private void updateTripState() {
-        try {
-            // Start trip
-            if(activeTrip == null) {
-                startTrip();
-            }
-            // End trip
-            else {
-                endTrip();
-            }
-        }
-        catch (Exception e) {
-            // Not trip was found
-            startTrip();
-        }
+    /**
+     * Toggle enabled state of ViewGroup by recursively traversing the ViewGroup and disabling all children
+     * Used for SlideButton as it is an immature 3rd-party view that is implemented in FrameLayout and does not respect 'enabled' property
+     * @param view
+     * @param enabled
+     */
+    private void toggleEnabled(ViewGroup view, boolean enabled) {
 
-        updateSlideButton();
+        int childCount = view.getChildCount();
+
+        for (int i = 0; i < childCount; i++) {
+
+            View child = view.getChildAt(i);
+            child.setEnabled(enabled);
+
+            if (child instanceof ViewGroup) {
+                toggleEnabled((ViewGroup) child, enabled);
+            }
+        }
     }
 
+    /**
+     * Helper function for starting/ending trips
+     */
+    private void handleTrip() {
+        // Start trip
+        if(activeTrips.isLoaded() && activeTrips.isEmpty()) {
+            startTrip();
+        }
+        // End trip
+        else if (activeTrips.isLoaded() && !activeTrips.isEmpty()){
+            endTrip();
+        }
+        // Not ready - for some reason, it seems impossible to disable the slide button (3rd party)
+        else {
+            Toast.makeText(getContext(), getString(R.string.exc_query_not_complete), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    /**
+     * Start the user trip
+     * The trip will be started only if other trip is not already active
+     */
     private void startTrip() {
+        // TODO: remove this - only for testing purposes
+        lastBeacon = new Beacon(UUID.fromString("0f14d0ab-9605-4a62-a9e4-5ed26688389b"), MacAddress.fromString("AA:BB:CC:DD:EE:FF"), 4, 1234, 56, 10);
 
         if (lastBeacon == null) {
             Toast.makeText(getContext(), getString(R.string.exc_location_unknown), Toast.LENGTH_LONG).show();
@@ -166,9 +201,7 @@ public class HomeFragment extends Fragment implements BeaconManager.MonitoringLi
             Location location = new Location(lastBeacon);
 
             try {
-                activeTrip = TripsRepository.startTrip(getContext(), location);
-                adapter = new LocationsAdapter(getContext(), activeTrip.getLocations());
-                rv_locations.setAdapter(adapter);
+                TripsRepository.startTrip(getContext(), location);
 
                 Toast.makeText(getContext(), getString(R.string.trip_started), Toast.LENGTH_LONG).show();
             } catch (Exception e) {
@@ -179,27 +212,52 @@ public class HomeFragment extends Fragment implements BeaconManager.MonitoringLi
         }
     }
 
+    /**
+     * End the user trip
+     * The trip will end only if there is an active trip
+     */
     private void endTrip() {
         try {
             TripsRepository.finishTrip(getContext());
 
-            activeTrip = null;
-            adapter = null;
-            rv_locations.setAdapter(null);
-
             Toast.makeText(getContext(), getString(R.string.trip_ended), Toast.LENGTH_LONG).show();
-        } catch (Exception e) {
+        } catch (NoActiveTripException e) {
             Toast.makeText(getContext(), getString(R.string.exc_no_active), Toast.LENGTH_LONG).show();
         }
     }
 
-    private void updateSlideButton() {
-        if (activeTrip == null) {
-            sb_start.setText(getString(R.string.start_trip));
-        }
-        else {
+    private void updateUI(Trip trip) {
+        updateSlideButton(trip);
+        updateRecyclerView(trip);
+    }
+
+    /**
+     * Update the slide button
+     * @param trip
+     */
+    private void updateSlideButton(Trip trip) {
+        toggleEnabled(sb_start, true);
+
+        if (trip != null && trip.isLoaded()) {
             sb_start.setText(getString(R.string.end_trip));
         }
+        else {
+            sb_start.setText(getString(R.string.start_trip));
+        }
+    }
+
+    /**
+     * Update the RecyclerView list
+     * @param trip
+     */
+    private void updateRecyclerView(Trip trip) {
+        if (trip != null) {
+            adapter = new LocationsAdapter(getContext(), trip.getLocations().sort(RealmTable.Location.CREATED_AT, Sort.DESCENDING));
+        }
+        else {
+            adapter = null;
+        }
+        rv_locations.setAdapter(adapter);
     }
 
     @Override

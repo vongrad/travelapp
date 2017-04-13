@@ -15,6 +15,7 @@ import dk.itu.vongrad.travelapp.realm.table.RealmTable;
 import dk.itu.vongrad.travelapp.utils.TripsHelper;
 import io.realm.Realm;
 import io.realm.RealmList;
+import io.realm.RealmResults;
 
 /**
  * Created by Adam Vongrej on 4/10/17.
@@ -26,8 +27,9 @@ public class TripsRepository {
      * Get all trips for the current user
      * @return RealmList<Trip> list of all trips
      */
-    public static RealmList<Trip> getAll() {
-        return UserRepository.getCurrentUser().getTrips();
+    public static RealmResults<Trip> getAll() {
+//        return UserRepository.getCurrentUser().getTrips();
+        return Realm.getDefaultInstance().where(Trip.class).findAll();
     }
 
     /**
@@ -48,6 +50,15 @@ public class TripsRepository {
     }
 
     /**
+     * Get active trip
+     * The active trip does not have the 'ended_at' field set
+     * @return trip
+     */
+    public static RealmResults<Trip> getActiveTrips() {
+        return getAll().where().isNull(RealmTable.Trip.ENDED_AT).findAllAsync();
+    }
+
+    /**
      * Check if there is an active trip
      * @return
      */
@@ -61,7 +72,7 @@ public class TripsRepository {
      * @return Trip
      * @throws ActiveTripException - if other trip is already active, throw exception
      */
-    public static Trip startTrip(Context context, Location location) throws Exception {
+    public static Trip startTrip(Context context, Location location) throws ActiveTripException {
 
         if (isActive()) {
             throw new ActiveTripException(context.getString(R.string.exc_already_active));
@@ -92,7 +103,7 @@ public class TripsRepository {
      * @param location - the next location user visited
      * @throws Exception - if no active trip found, throw exception
      */
-    public static void addLocation(final Context context, final Location location) throws Exception {
+    public static void addLocation(final Context context, final Location location) throws NoActiveTripException {
 
         final Trip trip = getActive();
         if(trip == null) {
@@ -111,7 +122,7 @@ public class TripsRepository {
      * Finish active trip
      * @throws NoActiveTripException - if no active trip found, throw exception
      */
-    public static void finishTrip(Context context) throws Exception {
+    public static void finishTrip(Context context) throws NoActiveTripException {
 
         final Trip trip = getActive();
         if (trip == null) {

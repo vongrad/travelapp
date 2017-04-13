@@ -41,6 +41,13 @@ public class TripsFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+
+        getActivity().setTitle(getString(R.string.drawer_trips));
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 

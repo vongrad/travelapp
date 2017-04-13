@@ -10,8 +10,8 @@ public class LocationHelper {
 
     public static String formatText(Location location) {
         StringBuilder sb = new StringBuilder();
-        sb.append("Floor: " + location.getFloor());
-        sb.append(" Room: " + location.getRoom());
+        sb.append("F: " + location.getFloor());
+        sb.append(" R: " + location.getRoom());
 
         return sb.toString();
     }

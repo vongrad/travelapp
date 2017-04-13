@@ -34,7 +34,7 @@ public class TransactionAdapter extends RealmRecyclerAdapter<Transaction, Transa
 
         Transaction transaction = getItem(position);
 
-        holder.txt_transaction.setText(getSign(transaction.getAmount()) + Math.abs(transaction.getAmount()));
+        holder.txt_transaction.setText(getSign(transaction.getAmount()) + Math.abs(transaction.getAmount()) + " DKK");
 
         if(transaction.getAmount() < 0) {
             holder.txt_transaction.setTextColor(ContextCompat.getColor(context, R.color.colorRed));

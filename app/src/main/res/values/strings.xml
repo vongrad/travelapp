@@ -38,6 +38,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="start_trip">Slide to start trip</string>
     <string name="end_trip">Slide to end trip</string>
+    <string name="not_ready">Not ready...</string>
     <string name="trip_started">Your trip has started.</string>
     <string name="trip_ended">Your trip has ended.</string>
 
@@ -45,5 +46,7 @@
     <string name="exc_already_active">Only one trip can be active at the time!</string>
     <string name="exc_no_active">No active trip found.</string>
     <string name="exc_location_unknown">Could not find any beacon in your area. Try again later.</string>
+    <string name="exc_unknown_error">Unknown exception</string>
+    <string name="exc_query_not_complete">Please wait, we are synchronizing your data</string>
 
 </resources>
