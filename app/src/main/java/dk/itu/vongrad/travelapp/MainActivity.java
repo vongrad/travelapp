@@ -23,6 +23,9 @@ import dk.itu.vongrad.travelapp.realm.model.Trip;
 import dk.itu.vongrad.travelapp.realm.model.User;
 import dk.itu.vongrad.travelapp.realm.utils.AuthManager;
 import dk.itu.vongrad.travelapp.repository.UserRepository;
+import dk.itu.vongrad.travelapp.services.AutoCheckoutService;
+import dk.itu.vongrad.travelapp.services.BootBroadcastReceiver;
+import dk.itu.vongrad.travelapp.utils.AlarmHelper;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
@@ -42,6 +45,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Intent serviceIntent = new Intent(this, AutoCheckoutService.class);
+
+        if (!AlarmHelper.isServiceAlarmUp(this, serviceIntent)) {
+            AlarmHelper.scheduleRepeatingService(this, serviceIntent, BootBroadcastReceiver.MILLIS_INTERVAL);
+        }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

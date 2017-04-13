@@ -26,6 +26,13 @@
             android:label="@string/title_activity_navigation"
             android:theme="@style/AppTheme.NoActionBar"/>
         <service android:name=".services.BeaconService"/>
+        <service android:name=".services.AutoCheckoutService"/>
+        <receiver android:name=".services.BeaconBroadcastReceiver"/>
+        <receiver android:name=".services.BootBroadcastReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
