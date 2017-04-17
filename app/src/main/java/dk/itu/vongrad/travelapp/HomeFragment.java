@@ -136,6 +136,7 @@ public class HomeFragment extends Fragment implements BeaconManager.MonitoringLi
         }
 
         sb_start = (SlideButton) view.findViewById(R.id.sb_start);
+        sb_start.setBackgroundResource(R.mipmap.a_slider);
 
         sb_start.setSlideButtonListener(new SlideButton.SlideButtonListener() {
             @Override

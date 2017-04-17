@@ -41,6 +41,7 @@
     <string name="not_ready">Not ready...</string>
     <string name="trip_started">Your trip has started.</string>
     <string name="trip_ended">Your trip has ended.</string>
+    <string name="dkk">DKK</string>
 
     <!-- Exception messages -->
     <string name="exc_already_active">Only one trip can be active at the time!</string>

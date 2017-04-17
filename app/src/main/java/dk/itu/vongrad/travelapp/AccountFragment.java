@@ -123,8 +123,7 @@ public class AccountFragment extends Fragment {
     }
 
     public void updateBalance(Account account) {
-        System.out.println("Updating balance");
-        edt_balance.setText(String.valueOf(account.getBalance()));
+        edt_balance.setText(account.getBalance() + " " + getString(R.string.dkk));
     }
 
     @Override

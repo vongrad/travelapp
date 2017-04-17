@@ -33,6 +33,14 @@ public class TripsRepository {
     }
 
     /**
+     * Get all finished trips
+     * @return
+     */
+    public static RealmResults<Trip> getAllActive() {
+        return getAll().where().isNotNull(RealmTable.Trip.ENDED_AT).findAll();
+    }
+
+    /**
      * Get last trip
      * @return Trip
      */

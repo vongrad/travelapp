@@ -25,7 +25,8 @@
             android:id="@+id/txt_from"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:textColor="@color/colorLightBlack" />
 
         <TextView
             android:id="@+id/textView7"
@@ -38,7 +39,8 @@
             android:id="@+id/txt_to"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:textColor="@color/colorLightBlack" />
     </LinearLayout>
 
     <LinearLayout
@@ -58,6 +60,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textColor="@color/colorRed" />
+            android:textColor="@color/colorLightBlack" />
     </LinearLayout>
 </LinearLayout>

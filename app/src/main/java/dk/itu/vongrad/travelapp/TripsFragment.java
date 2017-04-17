@@ -51,7 +51,7 @@ public class TripsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        adapter = new TripsAdapter(getContext(), TripsRepository.getAll(), mListener);
+        adapter = new TripsAdapter(getContext(), TripsRepository.getAllActive(), mListener);
     }
 
     @Override

@@ -3,10 +3,13 @@ package dk.itu.vongrad.travelapp;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import dk.itu.vongrad.travelapp.realm.model.Account;
 import dk.itu.vongrad.travelapp.realm.model.User;
@@ -56,25 +59,29 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Account account = new Account(0.0);
+                if(!TextUtils.isEmpty(edt_firstName.getText()) && !TextUtils.isEmpty(edt_lastName.getText()) && !TextUtils.isEmpty(edt_email.getText()) &&
+                        !TextUtils.isEmpty(edt_cardId.getText()) && !TextUtils.isEmpty(edt_username.getText()) && !TextUtils.isEmpty(edt_password.getText())) {
 
-                User user = new User(edt_firstName.getText().toString(), edt_lastName.getText().toString(),
-                        edt_email.getText().toString(), Long.parseLong(edt_cardId.getText().toString()),
-                        edt_username.getText().toString(), edt_password.getText().toString(), account);
+                    Account account = new Account(0.0);
 
-                AuthManager.register(user, new SyncUser.Callback() {
-                    @Override
-                    public void onSuccess(SyncUser user) {
-                        Intent i = new Intent(RegisterActivity.this, MainActivity.class);
-                        startActivity(i);
-                        finish();
-                    }
+                    User user = new User(edt_firstName.getText().toString(), edt_lastName.getText().toString(),
+                            edt_email.getText().toString(), Long.parseLong(edt_cardId.getText().toString()),
+                            edt_username.getText().toString(), edt_password.getText().toString(), account);
 
-                    @Override
-                    public void onError(ObjectServerError error) {
+                    AuthManager.register(user, new SyncUser.Callback() {
+                        @Override
+                        public void onSuccess(SyncUser user) {
+                            Intent i = new Intent(RegisterActivity.this, MainActivity.class);
+                            startActivity(i);
+                            finish();
+                        }
 
-                    }
-                });
+                        @Override
+                        public void onError(ObjectServerError error) {
+
+                        }
+                    });
+                }
             }
         });
     }

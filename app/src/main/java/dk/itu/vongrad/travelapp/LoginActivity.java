@@ -3,10 +3,13 @@ package dk.itu.vongrad.travelapp;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import dk.itu.vongrad.travelapp.realm.utils.AuthManager;
 import io.realm.ObjectServerError;
@@ -53,7 +56,9 @@ public class LoginActivity extends AppCompatActivity implements SyncUser.Callbac
 
             @Override
             public void onClick(View v) {
-                AuthManager.login(edt_username.getText().toString(), edt_password.getText().toString(), LoginActivity.this);
+                if(!TextUtils.isEmpty(edt_username.getText()) && !TextUtils.isEmpty(edt_password.getText())) {
+                    AuthManager.login(edt_username.getText().toString(), edt_password.getText().toString(), LoginActivity.this);
+                }
             }
         });
     }

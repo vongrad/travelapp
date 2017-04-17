@@ -122,10 +122,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         int id = item.getItemId();
 
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        else if (id == R.id.action_logout) {
+        if (id == R.id.action_logout) {
             AuthManager.logout();
 
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
