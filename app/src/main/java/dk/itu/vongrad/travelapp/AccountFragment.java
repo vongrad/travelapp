@@ -33,7 +33,7 @@ import io.realm.RealmResults;
  */
 public class AccountFragment extends Fragment {
 
-    private User user;
+    private Account account;
 
     private Button btn_deposit;
     private EditText edt_balance;
@@ -43,6 +43,8 @@ public class AccountFragment extends Fragment {
     private RecyclerView.LayoutManager layoutManager;
 
     private OnFragmentInteractionListener mListener;
+
+    private RealmChangeListener<Account> accountChangeListener;
 
     public AccountFragment() {
         // Required empty public constructor
@@ -57,23 +59,36 @@ public class AccountFragment extends Fragment {
         AccountFragment fragment = new AccountFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
+
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        user = UserRepository.getCurrentUser();
-
-        RealmResults<Transaction> transactions = AccountRepository.getTransactions();
-        adapter = new TransactionAdapter(getContext(), transactions);
     }
 
     @Override
     public void onResume() {
         super.onResume();
         getActivity().setTitle(getString(R.string.drawer_account));
+
+        account = AccountRepository.getCurrentAccount();
+
+        accountChangeListener = new RealmChangeListener<Account>() {
+            @Override
+            public void onChange(Account account) {
+                updateBalance(account);
+            }
+        };
+
+        account.addChangeListener(accountChangeListener);
+
+        updateBalance(account);
+
+        RealmResults<Transaction> transactions = AccountRepository.getTransactions();
+        adapter = new TransactionAdapter(getContext(), transactions);
+        rv_transactions.setAdapter(adapter);
     }
 
     @Override
@@ -94,15 +109,6 @@ public class AccountFragment extends Fragment {
         btn_deposit = (Button) view.findViewById(R.id.btn_deposit);
         edt_balance = (EditText) view.findViewById(R.id.edt_balance);
 
-        updateBalance(user.getAccount());
-
-        user.getAccount().addChangeListener(new RealmChangeListener<Account>() {
-            @Override
-            public void onChange(Account account) {
-                updateBalance(account);
-            }
-        });
-
         rv_transactions = (RecyclerView) view.findViewById(R.id.rv_transactions);
 
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(rv_transactions.getContext(), DividerItemDecoration.VERTICAL);
@@ -110,8 +116,6 @@ public class AccountFragment extends Fragment {
 
         layoutManager = new LinearLayoutManager(getContext());
         rv_transactions.setLayoutManager(layoutManager);
-
-        rv_transactions.setAdapter(adapter);
 
         btn_deposit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -140,6 +144,8 @@ public class AccountFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+        account.removeChangeListener(accountChangeListener);
+        accountChangeListener = null;
     }
 
     /**

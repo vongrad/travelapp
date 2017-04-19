@@ -2,6 +2,7 @@ package dk.itu.vongrad.travelapp.repository;
 
 import java.util.Date;
 
+import dk.itu.vongrad.travelapp.realm.model.Account;
 import dk.itu.vongrad.travelapp.realm.model.Transaction;
 import dk.itu.vongrad.travelapp.realm.model.User;
 import dk.itu.vongrad.travelapp.realm.table.RealmTable;
@@ -57,5 +58,13 @@ public class AccountRepository {
      */
     public static RealmResults<Transaction> getTransactions() {
         return UserRepository.getCurrentUser().getAccount().getTransactions().where().findAllSorted(RealmTable.Transaction.CREATED_AT, Sort.DESCENDING);
+    }
+
+    /**
+     * Get current user account
+     * @return
+     */
+    public static Account getCurrentAccount() {
+        return UserRepository.getCurrentUser().getAccount();
     }
 }

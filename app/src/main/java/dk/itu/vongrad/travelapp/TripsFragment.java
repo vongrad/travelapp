@@ -30,6 +30,7 @@ public class TripsFragment extends Fragment {
 
     private OnListFragmentInteractionListener mListener;
     private RecyclerView.Adapter adapter;
+    private RecyclerView recyclerView;
 
     public TripsFragment() {}
 
@@ -45,13 +46,14 @@ public class TripsFragment extends Fragment {
         super.onResume();
 
         getActivity().setTitle(getString(R.string.drawer_trips));
+
+        adapter = new TripsAdapter(getContext(), TripsRepository.getAllActive(), mListener);
+        recyclerView.setAdapter(adapter);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        adapter = new TripsAdapter(getContext(), TripsRepository.getAllActive(), mListener);
     }
 
     @Override
@@ -62,14 +64,12 @@ public class TripsFragment extends Fragment {
         // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
+            recyclerView = (RecyclerView) view;
 
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
 
             DividerItemDecoration divider = new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL);
             recyclerView.addItemDecoration(divider);
-
-            recyclerView.setAdapter(adapter);
         }
         return view;
     }

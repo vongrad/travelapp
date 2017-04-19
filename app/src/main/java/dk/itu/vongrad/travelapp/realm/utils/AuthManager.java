@@ -58,6 +58,7 @@ public class AuthManager {
             @Override
             public void onError(ObjectServerError error) {
                 System.out.println(error);
+                callback.onError(error);
             }
         });
     }

@@ -1,5 +1,6 @@
 package dk.itu.vongrad.travelapp;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -8,8 +9,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-
-import org.w3c.dom.Text;
 
 import dk.itu.vongrad.travelapp.realm.utils.AuthManager;
 import io.realm.ObjectServerError;
@@ -23,6 +22,8 @@ public class LoginActivity extends AppCompatActivity implements SyncUser.Callbac
     private Button btn_login;
 
     private TextView txt_register;
+
+    private ProgressDialog progress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +58,7 @@ public class LoginActivity extends AppCompatActivity implements SyncUser.Callbac
             @Override
             public void onClick(View v) {
                 if(!TextUtils.isEmpty(edt_username.getText()) && !TextUtils.isEmpty(edt_password.getText())) {
+                    progress = ProgressDialog.show(LoginActivity.this, getString(R.string.progress_login), getString(R.string.progress_wait));
                     AuthManager.login(edt_username.getText().toString(), edt_password.getText().toString(), LoginActivity.this);
                 }
             }
@@ -65,6 +67,7 @@ public class LoginActivity extends AppCompatActivity implements SyncUser.Callbac
 
     @Override
     public void onSuccess(SyncUser user) {
+        progress.dismiss();
         completeLogin();
     }
 
@@ -79,6 +82,7 @@ public class LoginActivity extends AppCompatActivity implements SyncUser.Callbac
 
     @Override
     public void onError(ObjectServerError error) {
+        progress.dismiss();
         //TODO: show error message
     }
 }

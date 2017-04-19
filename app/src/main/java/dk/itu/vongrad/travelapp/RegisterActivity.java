@@ -1,5 +1,6 @@
 package dk.itu.vongrad.travelapp;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -68,17 +69,20 @@ public class RegisterActivity extends AppCompatActivity {
                             edt_email.getText().toString(), Long.parseLong(edt_cardId.getText().toString()),
                             edt_username.getText().toString(), edt_password.getText().toString(), account);
 
+                    final ProgressDialog dialog = ProgressDialog.show(RegisterActivity.this, getString(R.string.progress_register), getString(R.string.progress_wait));
+
                     AuthManager.register(user, new SyncUser.Callback() {
                         @Override
                         public void onSuccess(SyncUser user) {
                             Intent i = new Intent(RegisterActivity.this, MainActivity.class);
                             startActivity(i);
                             finish();
+                            dialog.dismiss();
                         }
 
                         @Override
                         public void onError(ObjectServerError error) {
-
+                            dialog.dismiss();
                         }
                     });
                 }
